@@ -56,6 +56,10 @@ JointStateListener::JointStateListener(const KDL::Tree& tree, const MimicMap& m,
   // set publish frequency
   double publish_freq;
   n_tilde.param("publish_frequency", publish_freq, 50.0);
+  // set how far into the future to publish fixed transforms (seconds)
+  double future_date_seconds;
+  n_tilde.param("future_date_fixed_transforms", future_date_seconds, 0.0);
+  future_date_fixed_ = ros::Duration(future_date_seconds);
   // set whether to use the /tf_static latched static transform broadcaster
   n_tilde.param("use_tf_static", use_tf_static_, false);
   // get the tf_prefix parameter from the closest namespace
@@ -80,7 +84,7 @@ JointStateListener::~JointStateListener()
 
 void JointStateListener::callbackFixedJoint(const ros::TimerEvent& e)
 {
-  state_publisher_.publishFixedTransforms(tf_prefix_, use_tf_static_);
+  state_publisher_.publishFixedTransforms(tf_prefix_, use_tf_static_, future_date_fixed_);
 }
 
 void JointStateListener::callbackJointState(const JointStateConstPtr& state)

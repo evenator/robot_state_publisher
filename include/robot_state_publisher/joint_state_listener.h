@@ -75,6 +75,7 @@ private:
   std::map<std::string, ros::Time> last_publish_time_;
   MimicMap mimic_;
   bool use_tf_static_;
+  ros::Duration future_date_fixed_;
 
 };
 }
